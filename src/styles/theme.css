@@ -1,0 +1,167 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 15px;
+
+  /* ── MN Advising Groupe Brand Colors ── */
+  --gold:        #F0BC2C;
+  --gold-dark:   #C8980E;
+  --gold-light:  #FEF7E0;
+  --teal:        #1AABBA;
+  --teal-dark:   #12889A;
+  --teal-light:  #E6F7F9;
+  --coral:       #CB5229;
+  --coral-dark:  #A84020;
+  --coral-light: #FBF0EC;
+
+  /* ── Base Tokens ── */
+  --background:           #F4F6F9;
+  --foreground:           #0F172A;
+  --card:                 #ffffff;
+  --card-foreground:      #0F172A;
+  --popover:              #ffffff;
+  --popover-foreground:   #0F172A;
+  --primary:              #1AABBA;
+  --primary-foreground:   #ffffff;
+  --secondary:            #F1F5F9;
+  --secondary-foreground: #475569;
+  --muted:                #F1F5F9;
+  --muted-foreground:     #64748B;
+  --accent:               #E6F7F9;
+  --accent-foreground:    #12889A;
+  --destructive:          #CB5229;
+  --destructive-foreground: #ffffff;
+  --border:               #E2E8F0;
+  --input:                #E2E8F0;
+  --input-background:     #ffffff;
+  --switch-background:    #CBD5E1;
+  --ring:                 #1AABBA;
+  --radius:               0.625rem;
+
+  /* Chart colours */
+  --chart-1: #1AABBA;
+  --chart-2: #F0BC2C;
+  --chart-3: #CB5229;
+  --chart-4: #2563EB;
+  --chart-5: #10B981;
+
+  /* Sidebar */
+  --sidebar:                  #ffffff;
+  --sidebar-foreground:       #0F172A;
+  --sidebar-primary:          #1AABBA;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent:           #E6F7F9;
+  --sidebar-accent-foreground: #12889A;
+  --sidebar-border:           #E2E8F0;
+  --sidebar-ring:             #1AABBA;
+
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+}
+
+@theme inline {
+  --color-background:               var(--background);
+  --color-foreground:               var(--foreground);
+  --color-card:                     var(--card);
+  --color-card-foreground:          var(--card-foreground);
+  --color-popover:                  var(--popover);
+  --color-popover-foreground:       var(--popover-foreground);
+  --color-primary:                  var(--primary);
+  --color-primary-foreground:       var(--primary-foreground);
+  --color-secondary:                var(--secondary);
+  --color-secondary-foreground:     var(--secondary-foreground);
+  --color-muted:                    var(--muted);
+  --color-muted-foreground:         var(--muted-foreground);
+  --color-accent:                   var(--accent);
+  --color-accent-foreground:        var(--accent-foreground);
+  --color-destructive:              var(--destructive);
+  --color-destructive-foreground:   var(--destructive-foreground);
+  --color-border:                   var(--border);
+  --color-input:                    var(--input);
+  --color-input-background:         var(--input-background);
+  --color-switch-background:        var(--switch-background);
+  --color-ring:                     var(--ring);
+  --color-chart-1:                  var(--chart-1);
+  --color-chart-2:                  var(--chart-2);
+  --color-chart-3:                  var(--chart-3);
+  --color-chart-4:                  var(--chart-4);
+  --color-chart-5:                  var(--chart-5);
+  --radius-sm:  calc(var(--radius) - 4px);
+  --radius-md:  calc(var(--radius) - 2px);
+  --radius-lg:  var(--radius);
+  --radius-xl:  calc(var(--radius) + 4px);
+  --color-sidebar:                      var(--sidebar);
+  --color-sidebar-foreground:           var(--sidebar-foreground);
+  --color-sidebar-primary:              var(--sidebar-primary);
+  --color-sidebar-primary-foreground:   var(--sidebar-primary-foreground);
+  --color-sidebar-accent:               var(--sidebar-accent);
+  --color-sidebar-accent-foreground:    var(--sidebar-accent-foreground);
+  --color-sidebar-border:               var(--sidebar-border);
+  --color-sidebar-ring:                 var(--sidebar-ring);
+
+  /* Brand colour utilities */
+  --color-teal:        var(--teal);
+  --color-teal-dark:   var(--teal-dark);
+  --color-teal-light:  var(--teal-light);
+  --color-gold:        var(--gold);
+  --color-gold-dark:   var(--gold-dark);
+  --color-gold-light:  var(--gold-light);
+  --color-coral:       var(--coral);
+  --color-coral-dark:  var(--coral-dark);
+  --color-coral-light: var(--coral-light);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  html {
+    font-size: var(--font-size);
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    line-height: 1.4;
+    color: #0F172A;
+  }
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    line-height: 1.4;
+    color: #0F172A;
+  }
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    line-height: 1.4;
+    color: #0F172A;
+  }
+  h4 {
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: 1.5;
+    color: #0F172A;
+  }
+  label {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  button {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  input {
+    font-size: var(--text-sm);
+    font-weight: 400;
+    line-height: 1.5;
+  }
+}
