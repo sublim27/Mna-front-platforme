@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import {
   GeneratedManifests, TabKey,
-  createClient, fetchManifests, updateManifestFields,
+  createClient, updateManifestFields,
   updateRawManifests, deployClient, downloadBundle,
 } from './client-api';
 
@@ -12,6 +12,7 @@ export interface ClientForm {
   name:           string;
   shortName:      string;
   industry:       string;
+  siemTechnology: string;
   color:          string;
   contactName:    string;
   contactEmail:   string;
@@ -48,6 +49,7 @@ type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
 const DEFAULT_FORM: ClientForm = {
   slug: '', name: '', shortName: '', industry: 'Financial Services',
+  siemTechnology: 'Wazuh',
   color: '#1AABBA', contactName: '', contactEmail: '', contactPhone: '',
   contractStatus: 'trial', contractStart: '', contractEnd: '', vpnCidr: '',
 };
@@ -137,6 +139,7 @@ export function useAddClient() {
         name:           form.name,
         shortName:      form.shortName,
         industry:       form.industry,
+        siemTechnology: form.siemTechnology,
         color:          form.color,
         contactName:    form.contactName,
         contactEmail:   form.contactEmail,
@@ -179,8 +182,9 @@ export function useAddClient() {
 
       setSaveState('saved');
       setTimeout(() => setSaveState('idle'), 3500);
-    } catch (err: any) {
-      setErrorMsg(err.message ?? 'Something went wrong');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Something went wrong';
+      setErrorMsg(message);
       setSaveState('error');
       setTimeout(() => setSaveState('idle'), 4000);
     }
@@ -189,7 +193,7 @@ export function useAddClient() {
   // ── Field update after creation ───────────────────────────────────────────
   // Called when user edits fields AFTER the client is already created
 
-  const handleFieldUpdate = async (tab: TabKey) => {
+  const handleFieldUpdate = async (_tab: TabKey) => {
     if (!manifestsLoaded) return;
     try {
       const updated = await updateManifestFields(form.slug, {
@@ -217,8 +221,9 @@ export function useAddClient() {
     if (!form.slug || !slugOk) return;
     try {
       await downloadBundle(form.slug);
-    } catch (err: any) {
-      setErrorMsg(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Download failed';
+      setErrorMsg(message);
       setSaveState('error');
       setTimeout(() => setSaveState('idle'), 3000);
     }

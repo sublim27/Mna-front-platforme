@@ -1,36 +1,53 @@
 import { useState } from 'react';
-import { Search, Bell, RefreshCw, Calendar, ChevronDown, Filter, Menu } from 'lucide-react';
-import { CLIENTS } from '../../data/mockData';
+import { useNavigate } from 'react-router';
+import { Search, Bell, RefreshCw, Calendar, ChevronDown, Filter, Menu, Sun, Moon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { cn } from '../../lib/utils';
+import { useNotifications } from '../../features/notifications/useNotifications';
+import type { DirectoryClient } from '../../features/client/use-client-directory';
 
 interface TopBarProps {
   title: string;
   subtitle?: string;
   selectedClient: string;
+  clients: DirectoryClient[];
   onClientChange: (client: string) => void;
   timeRange: string;
   onTimeRangeChange: (range: string) => void;
   onMenuClick: () => void;
+  theme: 'light' | 'dark';
+  onToggleTheme: () => void;
 }
 
 const TIME_RANGES = ['Last 1 hour', 'Last 4 hours', 'Last 24 hours', 'Last 7 days', 'Last 30 days'];
 
 export function TopBar({
-  title, subtitle, selectedClient, onClientChange,
+  title, subtitle, selectedClient, clients, onClientChange,
   timeRange, onTimeRangeChange, onMenuClick,
+  theme, onToggleTheme,
 }: TopBarProps) {
   const [showClientMenu, setShowClientMenu] = useState(false);
   const [showTimeMenu, setShowTimeMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const navigate = useNavigate();
+  const {
+    items: notifications,
+    unreadCount,
+    loading: notificationsLoading,
+    error: notificationsError,
+    markRead,
+    markAllRead,
+  } = useNotifications();
 
-  const clients = Object.values(CLIENTS);
-  const activeClient = selectedClient !== 'all' ? CLIENTS[selectedClient] : null;
+  const activeClient = selectedClient !== 'all'
+    ? clients.find((client) => client.id === selectedClient) ?? null
+    : null;
 
   return (
     <header
-      className="fixed top-0 right-0 left-0 lg:left-[248px] z-30 flex items-center gap-2 md:gap-3 px-3 md:px-6 bg-white"
-      style={{ height: 60, borderBottom: '1px solid #E2E8F0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
+      className="fixed top-0 right-0 left-0 lg:left-[248px] z-30 flex items-center gap-2 md:gap-3 px-3 md:px-6 bg-card"
+      style={{ height: 60, borderBottom: '1px solid var(--border)', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}
     >
       {/* Hamburger — mobile only */}
       <button
@@ -43,8 +60,8 @@ export function TopBar({
 
       {/* Page Info */}
       <div className="flex-1 min-w-0">
-        <h2 style={{ color: '#0F172A', fontSize: 16, fontWeight: 700, margin: 0, lineHeight: 1.2 }} className="truncate">{title}</h2>
-        {subtitle && <p style={{ color: '#94A3B8', fontSize: 11, margin: 0, lineHeight: 1 }} className="hidden sm:block truncate">{subtitle}</p>}
+        <h2 style={{ color: 'var(--foreground)', fontSize: 16, fontWeight: 700, margin: 0, lineHeight: 1.2 }} className="truncate">{title}</h2>
+        {subtitle && <p style={{ color: 'var(--muted-foreground)', fontSize: 11, margin: 0, lineHeight: 1 }} className="hidden sm:block truncate">{subtitle}</p>}
       </div>
 
       {/* Search — hidden on xs */}
@@ -59,10 +76,10 @@ export function TopBar({
       {/* Client Filter — hidden on sm */}
       <div className="relative hidden sm:block">
         <button
-          onClick={() => { setShowClientMenu(!showClientMenu); setShowTimeMenu(false); }}
+          onClick={() => { setShowClientMenu(!showClientMenu); setShowTimeMenu(false); setShowNotifications(false); }}
           className={cn(
             'flex items-center gap-2 px-3 h-8 rounded-lg border text-xs font-medium transition-colors',
-            'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+            'border-border bg-card text-muted-foreground hover:bg-accent/40'
           )}
         >
           {activeClient ? (
@@ -74,13 +91,13 @@ export function TopBar({
         </button>
         {showClientMenu && (
           <div
-            className="absolute top-full mt-1 right-0 py-1 rounded-xl shadow-lg z-50 bg-white min-w-[180px]"
-            style={{ border: '1px solid #E2E8F0' }}
+            className="absolute top-full mt-1 right-0 py-1 rounded-xl shadow-lg z-50 bg-card min-w-[180px]"
+            style={{ border: '1px solid var(--border)' }}
           >
             <button
               onClick={() => { onClientChange('all'); setShowClientMenu(false); }}
-              className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-slate-50 transition-colors text-xs"
-              style={{ color: selectedClient === 'all' ? '#1AABBA' : '#64748B', fontWeight: selectedClient === 'all' ? 600 : 400 }}
+              className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-accent/40 transition-colors text-xs"
+              style={{ color: selectedClient === 'all' ? 'var(--primary)' : 'var(--muted-foreground)', fontWeight: selectedClient === 'all' ? 600 : 400 }}
             >
               All Clients
             </button>
@@ -88,8 +105,8 @@ export function TopBar({
               <button
                 key={client.id}
                 onClick={() => { onClientChange(client.id); setShowClientMenu(false); }}
-                className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-slate-50 transition-colors text-xs"
-                style={{ color: selectedClient === client.id ? client.color : '#64748B', fontWeight: selectedClient === client.id ? 600 : 400 }}
+                className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-accent/40 transition-colors text-xs"
+                style={{ color: selectedClient === client.id ? client.color : 'var(--muted-foreground)', fontWeight: selectedClient === client.id ? 600 : 400 }}
               >
                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: client.color }} />
                 {client.name}
@@ -102,8 +119,8 @@ export function TopBar({
       {/* Time Range — hidden on xs */}
       <div className="relative hidden sm:block">
         <button
-          onClick={() => { setShowTimeMenu(!showTimeMenu); setShowClientMenu(false); }}
-          className="flex items-center gap-2 px-3 h-8 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+          onClick={() => { setShowTimeMenu(!showTimeMenu); setShowClientMenu(false); setShowNotifications(false); }}
+          className="flex items-center gap-2 px-3 h-8 rounded-lg border border-border bg-card text-xs font-medium text-muted-foreground hover:bg-accent/40 transition-colors"
         >
           <Calendar size={12} className="text-slate-400" />
           <span className="hidden lg:inline">{timeRange}</span>
@@ -111,15 +128,15 @@ export function TopBar({
         </button>
         {showTimeMenu && (
           <div
-            className="absolute top-full mt-1 right-0 py-1 rounded-xl shadow-lg z-50 bg-white min-w-[160px]"
-            style={{ border: '1px solid #E2E8F0' }}
+            className="absolute top-full mt-1 right-0 py-1 rounded-xl shadow-lg z-50 bg-card min-w-[160px]"
+            style={{ border: '1px solid var(--border)' }}
           >
             {TIME_RANGES.map((range) => (
               <button
                 key={range}
                 onClick={() => { onTimeRangeChange(range); setShowTimeMenu(false); }}
-                className="w-full px-3 py-2 text-left hover:bg-slate-50 transition-colors text-xs"
-                style={{ color: timeRange === range ? '#1AABBA' : '#64748B', fontWeight: timeRange === range ? 600 : 400 }}
+                className="w-full px-3 py-2 text-left hover:bg-accent/40 transition-colors text-xs"
+                style={{ color: timeRange === range ? 'var(--primary)' : 'var(--muted-foreground)', fontWeight: timeRange === range ? 600 : 400 }}
               >
                 {range}
               </button>
@@ -129,23 +146,113 @@ export function TopBar({
       </div>
 
       {/* Refresh */}
-      <Button variant="ghost" size="icon-sm" title="Refresh" className="hidden sm:inline-flex">
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        title="Refresh"
+        className="hidden sm:inline-flex"
+        onClick={() => window.location.reload()}
+      >
         <RefreshCw size={14} className="text-slate-400" />
+      </Button>
+
+      {/* Theme */}
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        onClick={onToggleTheme}
+      >
+        {theme === 'dark' ? (
+          <Sun size={14} className="text-amber-400" />
+        ) : (
+          <Moon size={14} className="text-slate-500" />
+        )}
       </Button>
 
       {/* Notifications */}
       <div className="relative">
-        <Button variant="ghost" size="icon-sm">
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          onClick={() => {
+            setShowNotifications((open) => !open);
+            setShowClientMenu(false);
+            setShowTimeMenu(false);
+          }}
+        >
           <Bell size={14} className="text-slate-400" />
         </Button>
-        <span
-          className="absolute top-0.5 right-0.5 rounded-full"
-          style={{ width: 6, height: 6, backgroundColor: '#CB5229' }}
-        />
+        {unreadCount > 0 && (
+          <span
+            className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: '#CB5229', color: '#fff', fontSize: 9, fontWeight: 700 }}
+          >
+            {unreadCount > 99 ? '99+' : unreadCount}
+          </span>
+        )}
+        {showNotifications && (
+          <div
+            className="absolute top-full mt-1 right-0 rounded-xl shadow-lg z-50 bg-card w-[320px] max-w-[90vw]"
+            style={{ border: '1px solid var(--border)' }}
+          >
+            <div className="px-3 py-2.5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
+              <p style={{ color: 'var(--foreground)', fontSize: 12, fontWeight: 700, margin: 0 }}>Notifications</p>
+              <button
+                onClick={() => { void markAllRead(); }}
+                className="text-xs font-medium"
+                style={{ color: 'var(--primary)' }}
+              >
+                Mark all read
+              </button>
+            </div>
+            <div className="max-h-80 overflow-auto">
+              {notificationsLoading && (
+                <p className="px-3 py-4 text-xs" style={{ color: 'var(--muted-foreground)' }}>Loading...</p>
+              )}
+              {!notificationsLoading && notificationsError && (
+                <p className="px-3 py-4 text-xs" style={{ color: '#CB5229' }}>{notificationsError}</p>
+              )}
+              {!notificationsLoading && !notificationsError && notifications.length === 0 && (
+                <p className="px-3 py-4 text-xs" style={{ color: 'var(--muted-foreground)' }}>No notifications yet.</p>
+              )}
+              {!notificationsLoading && !notificationsError && notifications.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    void markRead(item.id);
+                    if (item.link) navigate(item.link);
+                    setShowNotifications(false);
+                  }}
+                  className="w-full text-left px-3 py-2.5 hover:bg-accent/40 transition-colors"
+                  style={{ borderBottom: '1px solid var(--border)' }}
+                >
+                  <div className="flex items-start gap-2">
+                    <div
+                      className="w-2 h-2 rounded-full mt-1.5 shrink-0"
+                      style={{ backgroundColor: item.isRead ? '#CBD5E1' : '#1AABBA' }}
+                    />
+                    <div className="min-w-0">
+                      <p style={{ color: 'var(--foreground)', fontSize: 12, fontWeight: item.isRead ? 500 : 700, margin: 0 }}>
+                        {item.title}
+                      </p>
+                      <p style={{ color: 'var(--muted-foreground)', fontSize: 11, margin: 0 }}>
+                        {item.message}
+                      </p>
+                      <p style={{ color: 'var(--muted-foreground)', fontSize: 10, margin: 0 }}>
+                        {new Date(item.createdAt).toLocaleString('en-GB')}
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Timestamp — desktop only */}
-      <span style={{ color: '#CBD5E1', fontSize: 11 }} className="hidden xl:inline shrink-0">
+      <span style={{ color: 'var(--muted-foreground)', fontSize: 11 }} className="hidden xl:inline shrink-0">
         {new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
       </span>
     </header>

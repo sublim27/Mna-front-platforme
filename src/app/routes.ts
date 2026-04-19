@@ -10,8 +10,9 @@ import SignIn from './features/auth/SignIn';
 import SignUp from './features/auth/SignUp';
 import { authClient } from './features/auth/auth-client';
 import Profile from './pages/Profile';
-import UserManagement from './pages/usermanagement';
+import UserManagement from './features/user-management';
 import AddClient from './features/client/add-client';
+import Clients from './features/client/list-client';
 
 async function requireAuth() {
   try {
@@ -51,6 +52,7 @@ export const router = createBrowserRouter([
       { path: 'incidents', Component: Incidents },
       { path: 'threat-intel', Component: ThreatIntel },
       { path: 'reports', Component: Reports },
+      { path: 'clients', Component: Clients },
       { path: 'add-client', Component: AddClient },
     ],
   },

@@ -10,9 +10,9 @@ const buttonVariants = cva(
       variant: {
         default: 'bg-teal text-white hover:bg-teal-dark shadow-sm',
         destructive: 'bg-coral text-white hover:bg-coral-dark shadow-sm',
-        outline: 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 shadow-sm',
-        secondary: 'bg-slate-100 text-slate-700 hover:bg-slate-200',
-        ghost: 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+        outline: 'border border-border bg-card text-foreground hover:bg-accent/40 shadow-sm',
+        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        ghost: 'text-muted-foreground hover:bg-accent/40 hover:text-foreground',
         link: 'text-teal underline-offset-4 hover:underline p-0 h-auto',
         gold: 'bg-gold text-white hover:bg-gold-dark shadow-sm',
       },

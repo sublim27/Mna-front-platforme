@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Copy, Check, RotateCcw, FormInput, Code2 } from 'lucide-react';
+import { useState, type ReactNode } from 'react';
+import { Copy, Check, RotateCcw, FormInput, Code2, type LucideIcon } from 'lucide-react';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import type { TabKey } from './client-api';
@@ -9,7 +9,7 @@ import type { TabKey } from './client-api';
 export function FieldRow({
   label, hint, required, children,
 }: {
-  label: string; hint?: string; required?: boolean; children: React.ReactNode;
+  label: string; hint?: string; required?: boolean; children: ReactNode;
 }) {
   return (
     <div className="space-y-1.5">
@@ -27,7 +27,7 @@ export function FieldRow({
 export function SectionHeader({
   step, icon: Icon, title, desc,
 }: {
-  step: number; icon: any; title: string; desc: string;
+  step: number; icon: LucideIcon; title: string; desc: string;
 }) {
   return (
     <div className="flex items-start gap-4 mb-5">

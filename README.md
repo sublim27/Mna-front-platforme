@@ -1,15 +1,20 @@
-<<<<<<< HEAD
-# Mna-front-platforme
-=======
+# SIEM Dashboard Frontend
 
-  # SIEM Dashboard
+React + Vite frontend for the SIEM platform.
 
-  This is a code bundle for SIEM Dashboard. The original project is available at https://www.figma.com/design/GtdP51M53Rqvx0vPtUrKut/SIEM-Dashboard.
+## Run locally
 
-  ## Running the code
+```bash
+npm install
+npm run dev
+```
 
-  Run `npm i` to install the dependencies.
+## Environment
 
-  Run `npm run dev` to start the development server.
-  
->>>>>>> 50d36dc (first commit)
+Create a `.env` file (or `.env.local`) and set:
+
+```bash
+VITE_API_BASE_URL=http://localhost:3000
+```
+
+If `VITE_API_BASE_URL` is not set, the app falls back to `window.location.origin`.

@@ -2,12 +2,14 @@ import {
   Building2, Mail, Phone, Calendar, Network,
   Download, Rocket, Save, ChevronRight, Code2,
   CheckCircle2, AlertTriangle, User, XCircle, Info,
+  ShieldCheck,
 } from 'lucide-react';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Separator } from '../../components/ui/separator';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/tabs';
+import { PageShell } from '../../components/layout/page-shell';
 
 import { useAddClient } from './use-client';
 import {
@@ -20,6 +22,14 @@ const INDUSTRIES = [
   'Manufacturing','Financial Services','Public Sector',
   'Technology','Retail & E-commerce','Energy & Utilities',
   'Healthcare','Telecommunications',
+];
+const SIEM_TECHS = [
+  'Wazuh',
+  'Microsoft Sentinel',
+  'Splunk Enterprise Security',
+  'IBM QRadar',
+  'Elastic Security',
+  'Google Chronicle',
 ];
 const CONTRACT_STATUSES = ['trial','active','suspended','churned'];
 const IC = 'h-9 text-sm';
@@ -37,7 +47,7 @@ export default function AddClient() {
   } = useAddClient();
 
   return (
-    <div className="max-w-5xl mx-auto px-4 md:px-6 py-6 pb-28 space-y-6">
+    <PageShell className="max-w-5xl pb-28">
 
       {/* Breadcrumb */}
       <div className="flex items-center gap-1.5 flex-wrap" style={{ color: '#94A3B8', fontSize: 12 }}>
@@ -97,6 +107,21 @@ export default function AddClient() {
 
             <FieldRow label="Industry">
               <SelectField value={form.industry} onChange={v => setField('industry', v)} options={INDUSTRIES} />
+            </FieldRow>
+
+            <FieldRow label="SIEM Technology">
+              <div className="relative">
+                <ShieldCheck size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                <select
+                  value={form.siemTechnology}
+                  onChange={(e) => setField('siemTechnology', e.target.value)}
+                  className="h-9 w-full rounded-lg border border-slate-200 bg-white text-sm text-slate-700 pl-8 pr-3 focus:outline-none focus:ring-2 focus:ring-teal/30"
+                >
+                  {SIEM_TECHS.map((tech) => (
+                    <option key={tech} value={tech}>{tech}</option>
+                  ))}
+                </select>
+              </div>
             </FieldRow>
 
             <FieldRow label="Brand Colour">
@@ -433,6 +458,6 @@ export default function AddClient() {
           </div>
         </div>
       </div>
-    </div>
+    </PageShell>
   );
 }
